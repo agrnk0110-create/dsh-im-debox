@@ -4,6 +4,14 @@
   "type": "module",
   "description": "Connect DeBox private chats and groups to DeepSeek Harness as an in-process IM channel: send a message to run a DSH task and get the answer back in the same chat.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agrnk0110-create/dsh-im-debox.git"
+  },
+  "homepage": "https://github.com/agrnk0110-create/dsh-im-debox#readme",
+  "bugs": {
+    "url": "https://github.com/agrnk0110-create/dsh-im-debox/issues"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",
