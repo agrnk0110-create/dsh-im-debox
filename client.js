@@ -416,7 +416,7 @@ window.__ModuleLoader__.load({
       )
     }
 
-    function StatusBar({ status }) {
+    function StatusBar({ status, embedded }) {
       const tone = status && status.connected ? 'ok' : status && status.keyConfigured ? 'warn' : 'bad'
       const main = !status
         ? '正在读取状态…'
@@ -429,9 +429,19 @@ window.__ModuleLoader__.load({
       if (status && status.botUserId) bits.push(status.botUserId)
       if (status && status.lastUpdateAt) bits.push('最近消息 ' + new Date(status.lastUpdateAt).toLocaleTimeString())
       if (status && status.allowAll) bits.push('允许任意用户')
+      // Embedded: the status line is the first block of the connection card, so
+      // it drops the pill outline and spans the card instead of floating above it.
+      const box = embedded
+        ? Object.assign({}, style.pill(tone), {
+            borderRadius: 0,
+            border: 'none',
+            borderBottom: '1px solid ' + HAIRLINE,
+            padding: '15px 22px',
+          })
+        : style.pill(tone)
       return h(
         'div',
-        { style: style.pill(tone) },
+        { style: box },
         h('span', { style: style.dot(tone) }),
         h(
           'div',
@@ -605,15 +615,14 @@ window.__ModuleLoader__.load({
           ),
         ),
         h('hr', { style: style.rule }),
-        h(StatusBar, { status }),
 
         h(
           Group,
-          { title: '机器人密钥' },
+          { title: '连接' },
+          h(StatusBar, { status, embedded: true }),
           h(
             Row,
             {
-              first: true,
               label: 'Bot App Key',
               hint: keyConfigured ? '已保存在凭证库；留空表示不修改' : '在 DeBox 的 BotMother 里创建机器人后获取',
             },
@@ -637,7 +646,7 @@ window.__ModuleLoader__.load({
                 disabled: disabled || !keyConfigured,
                 onClick: onTest,
               },
-              busy === 'test' ? '测试中…' : '测试',
+              busy === 'test' ? '测试中…' : '测试连接',
             ),
             h(
               'button',
