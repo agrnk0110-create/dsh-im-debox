@@ -1,0 +1,12 @@
+# Defaults shipped with the bundle. Anything user-specific (workdir, allowed
+# users) belongs in the profile's own cordis.patch.yml as an `- id: dsh-im-debox`
+# row, and the bot key belongs in the credentials store
+# (~/.dsh/.credentials.yaml, ref DSH_DEBOX_BOT_API_KEY) — never in this file.
+- insert:
+    - id: dsh-im-debox
+      name: 'dsh-im-debox'
+      config:
+        apiKeyRef: DSH_DEBOX_BOT_API_KEY
+        workdir: ''
+        allowAll: false
+        allowedUsers: []

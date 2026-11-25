@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "DeBox 机器人",
+    "description": "把 DeBox 私聊和群聊里的每条消息变成 DSH 任务，执行结果回到同一个聊天。插件在宿主进程内运行，Bot App Key 存在凭证库里（引用 DSH_DEBOX_BOT_API_KEY）而不是配置文件里，并把这些会话钉在 workspace-write 权限上，任务只能读写工作区。",
+    "detail": "docs/DETAIL.zh.md"
+  }
+}

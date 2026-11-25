@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300">
+  <defs>
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2f7cf6"/>
+      <stop offset="100%" stop-color="#4b6bff"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7a4dff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#2f7cf6" stop-opacity="0.95"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7a4dff"/>
+    </marker>
+  </defs>
+
+  <rect x="32" y="60" width="248" height="180" rx="28" fill="url(#panel)" opacity="0.12"/>
+  <path d="M60 96h176a20 20 0 0 1 20 20v56a20 20 0 0 1-20 20h-96l-40 28v-28h-40a20 20 0 0 1-20-20v-56a20 20 0 0 1 20-20z" fill="url(#bubble)"/>
+  <circle cx="112" cy="146" r="9" fill="#ffffff"/>
+  <circle cx="148" cy="146" r="9" fill="#ffffff" opacity="0.85"/>
+  <circle cx="184" cy="146" r="9" fill="#ffffff" opacity="0.7"/>
+
+  <path d="M292 150h56" stroke="#7a4dff" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <rect x="360" y="60" width="248" height="180" rx="24" fill="url(#panel)" opacity="0.14"/>
+  <rect x="360" y="60" width="248" height="180" rx="24" fill="none" stroke="url(#panel)" stroke-width="3"/>
+  <rect x="384" y="86" width="60" height="10" rx="5" fill="#7a4dff" opacity="0.8"/>
+  <rect x="384" y="118" width="200" height="10" rx="5" fill="#2f7cf6" opacity="0.55"/>
+  <rect x="384" y="142" width="168" height="10" rx="5" fill="#2f7cf6" opacity="0.55"/>
+  <rect x="384" y="166" width="188" height="10" rx="5" fill="#2f7cf6" opacity="0.4"/>
+  <rect x="384" y="196" width="34" height="18" rx="6" fill="#2f7cf6"/>
+</svg>

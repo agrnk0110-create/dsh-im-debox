@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "DeBox Bot",
+    "description": "Turns every DeBox private chat or group message into a DSH task and posts the result back to the same chat. Runs inside the Host process, keeps the bot App Key in the credential store (ref DSH_DEBOX_BOT_API_KEY) instead of the settings file, and pins each DeBox session to workspace-write so tasks cannot write outside your workspace.",
+    "detail": "docs/DETAIL.md"
+  }
+}
