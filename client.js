@@ -533,9 +533,14 @@ window.__ModuleLoader__.load({
           const result = await call(ctx, 'save', payload)
           setApiKey('')
           baseline.current = formOf({ workdir: payload.workdir, allowAll, allowedUsers: payload.allowedUsers })
-          setNotice(result && result.restarting ? '已保存，插件正在重启…' : '已保存')
-          if (result && result.restarting) {
-            setTimeout(() => void call(ctx, 'status', {}).then((value) => adopt(value, true)).catch(() => {}), 2500)
+          const rebooting = Boolean(result && (result.restarting || result.reloaded))
+          setNotice(rebooting ? '已保存，正在重新连接 DeBox…' : '已保存')
+          if (rebooting) {
+            // The channel reboots a tick after the reply; poll twice so the
+            // status pill flips from 未连接 to 已连接 without a manual refresh.
+            for (const delay of [1200, 3000, 6000]) {
+              setTimeout(() => void call(ctx, 'status', {}).then((value) => adopt(value, true)).catch(() => {}), delay)
+            }
           } else {
             setTimeout(() => void refresh(), 400)
           }

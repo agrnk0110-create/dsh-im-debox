@@ -762,6 +762,9 @@ async function settingsCall(ctx, deps, method, payload) {
   if (method === 'clearKey') {
     await ctx.credentials.unset(deps.ref);
     deps.write('settings: cleared the stored bot key');
+    // Reboot so the live channel stops instead of polling with a key the user
+    // just removed; a reload also clears the stale 'connected' status.
+    await deps.reload();
     return settingsStatus(ctx, deps);
   }
   throw new Error(`unknown DeBox settings method: ${method}`);
@@ -806,6 +809,23 @@ function sessionTitle(message, chatId, chatType) {
   return typeof name === 'string' && name.trim() ? name.trim() : chatId;
 }
 
+/**
+ * True when every field the panel sent already matches the live config, so the
+ * config editor would write nothing and never restart the plugin.
+ * @param config - config the plugin is running with.
+ * @param next - config fields the panel asked to save.
+ * @returns whether the requested config equals the current one.
+ */
+function configUnchanged(config, next) {
+  if ('workdir' in next && (config?.workdir ?? '') !== next.workdir) return false;
+  if ('allowAll' in next && (config?.allowAll === true) !== next.allowAll) return false;
+  if ('allowedUsers' in next) {
+    const live = normalizeUsers(config?.allowedUsers);
+    if (live.join(',') !== next.allowedUsers.join(',')) return false;
+  }
+  return true;
+}
+
 /** Normalize the allowlist the panel sends: a list, or comma/space separated text. */
 function normalizeUsers(value) {
   const raw = Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[\s,，]+/) : [];
@@ -834,9 +854,17 @@ async function settingsSave(ctx, deps, payload) {
   if (typeof payload?.workdir === 'string') next.workdir = payload.workdir.trim();
   if (typeof payload?.allowAll === 'boolean') next.allowAll = payload.allowAll;
   if (payload?.allowedUsers !== undefined) next.allowedUsers = normalizeUsers(payload.allowedUsers);
-  if (Object.keys(next).length === 0) {
-    if (apiKey) await deps.reload();
-    return { saved: true, reloaded: apiKey !== '' };
+  // The panel always sends workdir/allowAll/allowedUsers, so an unchanged save
+  // would fall through to the config editor, whose write is a no-op and whose
+  // reload never happens. A new key shipped that way would never be picked up:
+  // the channel stays idle until some unrelated restart. Compare first.
+  const unchanged = configUnchanged(deps.config, next);
+  if (Object.keys(next).length === 0 || unchanged) {
+    if (apiKey) {
+      await deps.reload();
+      return { saved: true, reloaded: true };
+    }
+    return { saved: true, reloaded: false };
   }
   const entry = ctx.fiber?.entry;
   const editor = ctx.get?.('configEditor');
